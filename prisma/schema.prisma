@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                Int            @id @default(autoincrement())
+  email             String         @unique
+  password          String
+  role              String         @default("user")
+
+  firstName         String?
+  lastName          String?
+  address           String?
+  phone             String?
+
+  sentMessages      Message[]      @relation("FromUser")
+  receivedMessages  Message[]      @relation("ToUser")
+  books             Book[]
+  sentSwapRequests     SwapRequest[] @relation("FromUserSwap")
+  receivedSwapRequests SwapRequest[] @relation("ToUserSwap")
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  from      User     @relation("FromUser", fields: [fromId], references: [id])
+  fromId    Int
+  to        User     @relation("ToUser", fields: [toId], references: [id])
+  toId      Int
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model Book {
+  id          Int      @id @default(autoincrement())
+  title       String
+  author      String
+  description String?
+  imageUrl    String?
+  owner       User     @relation(fields: [ownerId], references: [id])
+  ownerId     Int
+  createdAt   DateTime @default(now())
+
+  offeredInSwaps SwapRequest[] @relation("OfferedBook")
+  wantedInSwaps  SwapRequest[] @relation("WantedBook")
+}
+
+model SwapRequest {
+  id             Int      @id @default(autoincrement())
+  fromUser       User     @relation("FromUserSwap", fields: [fromUserId], references: [id])
+  fromUserId     Int
+  toUser         User     @relation("ToUserSwap", fields: [toUserId], references: [id])
+  toUserId       Int
+  bookOffered    Book     @relation("OfferedBook", fields: [bookOfferedId], references: [id])
+  bookOfferedId  Int
+  bookWanted     Book     @relation("WantedBook", fields: [bookWantedId], references: [id])
+  bookWantedId   Int
+  message        String?
+  status         String   @default("pending")
+  createdAt      DateTime @default(now())
+}
