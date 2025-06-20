@@ -23,6 +23,13 @@ Admin paneli üzerinden tüm kullanıcıları ve kitapları yönetmek mümkünd�
     Email: admin@com
     Şifre: 1
 
+---
+## 👤 Normal Kullanıcı Giriş Bilgileri
+
+    Bu bilgiler sadece test içindir.
+    Email: a@hotmail.com
+    Şifre: 1
+
 ## 🚀 Kurulum Talimatları
 ```bash
 git clone https://github.com/kullanici/kitap-takas.git
